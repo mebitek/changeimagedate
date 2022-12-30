@@ -1,4 +1,4 @@
-package com.mebitek.changeimagedate;
+package com.mebitek.changeimagedate.changeimagedate;
 
 import org.junit.Test;
 
