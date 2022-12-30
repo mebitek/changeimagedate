@@ -6,7 +6,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,10 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -35,6 +37,8 @@ public class HomeFragment extends Fragment {
          "jpeg",
          "webp"
  ));
+
+ private static final boolean logEnabled = false;
 
  private FragmentHomeBinding binding;
 
@@ -93,7 +97,9 @@ public class HomeFragment extends Fragment {
    new Thread(() -> {
     for (File file : finalFiles) {
      String fileName = file.getName();
-     Log.d("Files", fileName);
+     if (logEnabled) {
+      Log.d("Files", fileName);
+     }
 
      String extension = FilenameUtils.getExtension(fileName);
      boolean exifSupported = SUPPORTED_EXIF_EXTENSIONS.contains(extension.toLowerCase()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
