@@ -24,10 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HomeFragment extends Fragment {
 
@@ -99,13 +96,7 @@ public class HomeFragment extends Fragment {
        }
        String filledDateString = datePart + timePart;
 
-       Date parsedDate = dateFormat.parse(filledDateString);
-
-       if (exifSupported) {
-        setExifDate(file, parsedDate);
-       }
-       assert parsedDate != null;
-       setFileDate(file, parsedDate);
+       setDates(dateFormat, filledDateString, exifSupported, file);
 
       } else if (fileName.startsWith("VID")) {
        String[] fileNameParts = new String[0];
@@ -162,21 +153,36 @@ public class HomeFragment extends Fragment {
  }
 
  @RequiresApi(api = Build.VERSION_CODES.S)
- private void setDefaultDate(File file, String defaultYear, boolean exifSupported) {
-  try {
-   String defaultDate = defaultYear + "0101120000";
-   Date defaultParsedDate = defaultFormatter.parse(defaultDate);
-   assert defaultParsedDate != null;
-   setFileDate(file, defaultParsedDate);
-   if (exifSupported) {
-    setExifDate(file, defaultParsedDate);
+ private void setDates(SimpleDateFormat dateFormat, String filledDateString, boolean exifSupported, File file) throws ParseException {
+  Date parsedDate = dateFormat.parse(filledDateString);
+
+  if (exifSupported) {
+   Long exifDate = setExifDate(file, parsedDate);
+   if (exifDate!=null) {
+    setFileDate(file, getDate(exifDate));
    }
-  } catch (Exception ignored) {
+  } else {
+   assert parsedDate != null;
+   setFileDate(file, parsedDate);
   }
  }
 
  @RequiresApi(api = Build.VERSION_CODES.S)
- private void setExifDate(File file, Date date) {
+ private void setDefaultDate(File file, String defaultYear, boolean exifSupported) {
+  try {
+   String defaultDate = defaultYear + "0101120000";
+   setDates(defaultFormatter, defaultDate, exifSupported, file);
+  } catch (Exception ignored) {}
+ }
+ 
+ private Date getDate(Long date) {
+  Calendar calendar = Calendar.getInstance();
+  calendar.setTimeInMillis(date);
+  return calendar.getTime();
+ }
+
+ @RequiresApi(api = Build.VERSION_CODES.S)
+ private Long setExifDate(File file, Date date) {
   try {
    String exifDate = exifDateFormatter.format(date);
    ExifInterface exifInterface = new ExifInterface(file);
@@ -184,8 +190,10 @@ public class HomeFragment extends Fragment {
     exifInterface.setAttribute(ExifInterface.TAG_DATETIME, exifDate);
     exifInterface.saveAttributes();
    }
+   return exifInterface.getDateTime();
   } catch (IOException e) {
    Log.e("error saving exif date:", e.getMessage());
+   return null;
   }
  }
 
