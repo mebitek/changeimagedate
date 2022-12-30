@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -57,9 +58,28 @@ public class HomeFragment extends Fragment {
 
   binding.buttonStart.setOnClickListener(view -> {
 
+   String defaultYear = binding.defaultYear.getText().toString();
+
+   if (!isNumeric(defaultYear)) {
+    Toast.makeText(getContext(),
+            "Invalid year",
+            Toast.LENGTH_LONG).show();
+    return;
+   }
+
+   if (binding.textHome.getText().toString().equals("")) {
+    Toast.makeText(getContext(),
+            "Invalid path",
+            Toast.LENGTH_LONG).show();
+    return;
+   }
+
 
    File directory = new File(binding.textHome.getText().toString());
    File[] files = directory.listFiles();
+   if (files == null) {
+    files = new File[0];
+   }
 
    ProgressDialog progressBar = new ProgressDialog(getContext());
    progressBar.setCancelable(false);
@@ -69,10 +89,9 @@ public class HomeFragment extends Fragment {
    progressBar.setMax(files.length);
    progressBar.show();
 
+   File[] finalFiles = files;
    new Thread(() -> {
-    Editable text = binding.defaultYear.getText();
-    String defaultYear = Objects.requireNonNull(text).toString();
-    for (File file : files) {
+    for (File file : finalFiles) {
      String fileName = file.getName();
      Log.d("Files", fileName);
 
@@ -158,7 +177,7 @@ public class HomeFragment extends Fragment {
 
   if (exifSupported) {
    Long exifDate = setExifDate(file, parsedDate);
-   if (exifDate!=null) {
+   if (exifDate != null) {
     setFileDate(file, getDate(exifDate));
    }
   } else {
@@ -172,9 +191,10 @@ public class HomeFragment extends Fragment {
   try {
    String defaultDate = defaultYear + "0101120000";
    setDates(defaultFormatter, defaultDate, exifSupported, file);
-  } catch (Exception ignored) {}
+  } catch (Exception ignored) {
+  }
  }
- 
+
  private Date getDate(Long date) {
   Calendar calendar = Calendar.getInstance();
   calendar.setTimeInMillis(date);
@@ -207,6 +227,19 @@ public class HomeFragment extends Fragment {
   } catch (IOException ex) {
    Log.e("error saving file date: ", ex.getMessage());
   }
+ }
+
+ public static boolean isNumeric(String string) {
+  if (string == null || string.equals("")) {
+   return false;
+  }
+
+  try {
+   Integer.parseInt(string);
+   return true;
+  } catch (NumberFormatException ignored) {
+  }
+  return false;
  }
 
  @Override
