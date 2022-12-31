@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -46,6 +48,8 @@ public class HomeFragment extends Fragment {
  private final SimpleDateFormat exifDateFormatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
  private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
+ private ActivityResultLauncher<Uri> openDocumentTreeActivity;
+
  @RequiresApi(api = Build.VERSION_CODES.S)
  public View onCreateView(@NonNull LayoutInflater inflater,
                           ViewGroup container, Bundle savedInstanceState) {
@@ -54,10 +58,7 @@ public class HomeFragment extends Fragment {
   View root = binding.getRoot();
 
   binding.buttonDirectory.setOnClickListener(view -> {
-   Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-   i.addCategory(Intent.CATEGORY_DEFAULT);
-   startActivityForResult(Intent.createChooser(i, "Choose directory"), 9999);
-
+   openDocumentTreeActivity.launch(null);
   });
 
   binding.buttonStart.setOnClickListener(view -> {
@@ -254,12 +255,16 @@ public class HomeFragment extends Fragment {
   binding = null;
  }
 
- public void onActivityResult(int requestCode, int resultCode, Intent data) {
-  if (requestCode == 9999) {
-   Uri uri = data.getData();
-   String path = FileUtil.getFullPathFromTreeUri(uri, getContext());
-   binding.textHome.setText(path);
-  }
+ @Override
+ public void onCreate(Bundle icicle) {
+  super.onCreate(icicle);
+  openDocumentTreeActivity = registerForActivityResult(
+          new ActivityResultContracts.OpenDocumentTree(),
+          uri -> {
+           String path = FileUtil.getFullPathFromTreeUri(uri, getContext());
+           binding.textHome.setText(path);
+
+          });
  }
 
 }
