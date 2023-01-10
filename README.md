@@ -1,3 +1,26 @@
 # Change Image Date
 
 simple app that scans a media folder and fix exif and create / modified date by file name/exif date
+
+Feature:
+- use default year date for unrecognized file pattern dates
+- support jpg, png, webp exif image format
+- update exif and file creation / last modified date
+
+how to use
+enter a default date
+chose directory to scan
+click start
+
+the app will scan each file in the selected directory trying to recognize a date pattern for ech file
+- (IMG[-|_]YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
+- (PXL[-|_]YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
+- (IMG[-|_]YYYYMMdd_WA00X.[jpg|jpeg,png|webp)
+- (VID[-|_]YYYYMMdd_WA00X.[mp4|mov|3gp])
+- (YYYYMMdd_WA00X.[jpg|jpeg,png|webp)
+- (YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
+- (YYYYMMdd_WA00X.[mp4|mov|3gp])
+
+if the app recognize a date patter exif, creation and modification date will be set
+if the app doesn't recognize a date patter exif, creation and modification data will be set to the default input year (DEFAULT_YEARMMdd_120000)
+
