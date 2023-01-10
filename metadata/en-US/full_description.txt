@@ -11,9 +11,10 @@ chose directory to scan
 click start
 
 the app will scan each file in the selected directory trying to recognize a date pattern for ech file
-- (IMG_YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
-- (IMG_YYYYMMdd_WA00X.[jpg|jpeg,png|webp)
-- (VID_YYYYMMdd_WA00X.[mp4|mov|3gp])
+- (IMG[-|_]YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
+- (PXL[-|_]YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
+- (IMG[-|_]YYYYMMdd_WA00X.[jpg|jpeg,png|webp)
+- (VID[-|_]YYYYMMdd_WA00X.[mp4|mov|3gp])
 - (YYYYMMdd_WA00X.[jpg|jpeg,png|webp)
 - (YYYYMMdd_HHmmss.[jpg|jpeg,png|webp)
 - (YYYYMMdd_WA00X.[mp4|mov|3gp])

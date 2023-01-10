@@ -105,11 +105,11 @@ public class HomeFragment extends Fragment {
      String extension = FilenameUtils.getExtension(fileName);
      boolean exifSupported = SUPPORTED_EXIF_EXTENSIONS.contains(extension.toLowerCase()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
      try {
-      if (fileName.startsWith("IMG")) {
+      if (fileName.startsWith("IMG")||fileName.startsWith("PXL")) {
        String[] fileNameParts = new String[0];
-       if (fileName.contains("IMG_")) {
+       if (fileName.contains("IMG_")||fileName.contains("PXL_")) {
         fileNameParts = fileName.split("_");
-       } else if (fileName.contains("IMG-")) {
+       } else if (fileName.contains("IMG-")||fileName.contains("PXL-")) {
         fileNameParts = fileName.split("-");
        }
        String datePart = defaultYear + "0101";
