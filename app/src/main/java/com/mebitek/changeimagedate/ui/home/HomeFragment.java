@@ -160,7 +160,12 @@ public class HomeFragment extends Fragment {
         }
         Date parsedDate = dateFormat.parse(datePart + timePart);
         assert parsedDate != null;
-        setFileDate(file, parsedDate);
+        if (!parsedDate.after(new Date())) {
+
+         setFileDate(file, parsedDate);
+        } else {
+         setDefaultDate(file, defaultYear, exifSupported);
+        }
        } catch (Exception e) {
         setDefaultDate(file, defaultYear, exifSupported);
        }

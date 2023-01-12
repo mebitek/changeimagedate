@@ -50,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
     getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
     startActivity(getpermission);
    }
-  }
+  } else {
+   //below android 11=======
+   startActivity(new Intent(this, MainActivity.class));
+   ActivityCompat.requestPermissions(this,
+           new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                   Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);  }
  }
 
 }
